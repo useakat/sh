@@ -1,0 +1,22 @@
+#!/bin/bash
+
+depth=1
+t=`find ./par_* -maxdepth $depth -name "ajob*" |wc -l`
+r=`find ./par_* -maxdepth $depth -name "run.ajob*" |wc -l`
+w=`find ./par_* -maxdepth $depth -name "wait.ajob*" |wc -l`
+d=`find ./par_* -maxdepth $depth -name "done.ajob*" |wc -l`
+
+echo "waiting while finishing jobs on cluster"
+while [[  $d -lt $t  ]]; do    
+    echo $w $r $d $t
+    rm -f ../status
+    echo $w $r $d $t > ../status
+    sleep 10
+    t=`find ./par_* -maxdepth $depth -name "ajob*" |wc -l`
+    r=`find ./par_* -maxdepth $depth -name "run.ajob*" |wc -l`
+    w=`find ./par_* -maxdepth $depth -name "wait.ajob*" |wc -l`
+    d=`find ./par_* -maxdepth $depth -name "done.ajob*" |wc -l`
+done
+echo $w $r $d $t
+
+sleep 20
